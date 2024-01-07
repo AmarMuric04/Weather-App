@@ -43,13 +43,13 @@ body {
     justify-content: center;
     text-align: center;
     padding: 2rem;
-    content: " The input field is not restricted to just cities or countries. It can also take continents and other locations as a value (e.g 'Europe').";
+    content: "The input field is not restricted to just cities or countries. It can also take continents and other locations as a value (e.g. 'Europe'). Note that if you input a country or continent the results wont be for the average temperature of the set location, the search will just look for a location with the set name. (e.g. 'America' returns a temperature of a random place in Mexico).";
     position: absolute;
     top: 7rem;
     right: 0rem;
     background-color: white;
     animation: dropdown 2s forwards;
-    height: 15rem;
+    height: 42rem;
     width: 20rem;
     border-radius: 2rem;
     border-top-right-radius: 0rem;

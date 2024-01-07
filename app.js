@@ -19,8 +19,14 @@ const getWeather = async function (inputData) {
     if (!response.ok)
       throw new Error("Could not find the location you are searching for");
 
+    const countryResponse = await fetch(
+      `https://api.geoapify.com/v1/geocode/reverse?lat=${data.coord.lat}&lon=${data.coord.lon}&apiKey=3fb39ed79a44414d856f73fc34789bf4`
+    );
+    const countryData = await countryResponse.json();
+    const mainCountryData = countryData.features[0].properties;
+
     setTimeout(() => {
-      results.innerHTML = generateHTML(data);
+      results.innerHTML = generateHTML(data, mainCountryData);
     }, 1000);
   } catch (err) {
     results.innerHTML = `<div class="error-message"><img class="icon-small" src="warning.png" /> ${err.message}.</div>`;
@@ -38,12 +44,17 @@ const renderSpinner = function () {
  * @param {Object | Object[]} data the data is the same data from the input field
  * @returns {string} HTML that gets custom generated based on the data given in the argument.
  */
-const generateHTML = function (data) {
+const generateHTML = function (data, dataCountry) {
   const temp = Number((data.main.temp - 273.15).toFixed(2));
   const icon = temp > 15 ? "hot.png" : "cold.png";
 
   return `  
-       <div class="overview"><p><img class="icon-medium" src="./weather-conditions-img/${data.weather[0].main}.png"</p>
+  <p>Showing results for ${dataCountry.city ? dataCountry.city + "," : ""} ${
+    dataCountry.country
+  }</p>
+       <div class="overview"><p><img class="icon-medium" src="./weather-conditions-img/${
+         data.weather[0].main
+       }.png"</p>
        <p>
        Mainly ${data.weather[0].main}
        </p>
@@ -54,19 +65,27 @@ const generateHTML = function (data) {
         </div>
         <div class="other-info">
           <div class="wind-speed other__info">
-            <img class="icon-small" src="./other-info-img/windy.png" />${data.wind.speed}m/s
+            <img class="icon-small" src="./other-info-img/windy.png" />${
+              data.wind.speed
+            }m/s
           </div>
 
           <div class="clouds other__info">
-            <img class="icon-small" src="./other-info-img/cloud.png" />${data.clouds.all}%
+            <img class="icon-small" src="./other-info-img/cloud.png" />${
+              data.clouds.all
+            }%
           </div>
 
           <div class="humidity other__info">
-            <img class="icon-small" src="./other-info-img/humidity.png" /> ${data.main.humidity}%
+            <img class="icon-small" src="./other-info-img/humidity.png" /> ${
+              data.main.humidity
+            }%
           </div>
 
           <div class="pressure other__info">
-            <img class="icon-small" src="./other-info-img/barometer.png" /> ${data.main.pressure}mb
+            <img class="icon-small" src="./other-info-img/barometer.png" /> ${
+              data.main.pressure
+            }mb
           </div>
         </div>`;
 };
